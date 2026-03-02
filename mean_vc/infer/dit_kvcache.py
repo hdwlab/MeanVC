@@ -176,7 +176,9 @@ class DiT(nn.Module):
                 rope = self.rotary_embed.forward_from_seq_len(offset + seq_len)
             else:
                 rope = self.rotary_embed.forward_from_seq_len(seq_len)
-
+            
+            if rope[0].dim() == 2:
+                rope = (rope[0].unsqueeze(1), rope[1])
             rope = (rope[0][:, - 140 : , :], rope[1])
                 
 
