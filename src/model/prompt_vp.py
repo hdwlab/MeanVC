@@ -1,7 +1,7 @@
 import math
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+# import torch.nn.functional as F
 
 
 class MultiHeadedAttention(nn.Module):
@@ -303,31 +303,31 @@ class TransformerEncoder(nn.Module):
         return x
 
 
-if __name__ == '__main__':
-    # feature = {
-    #     'token_emb': torch.rand(2, 1024, 128),
-    #     'prompt': torch.rand(2, 1024, 150),
-    #     'vp': torch.rand(2, 192)
-    # }
-    # x = torch.rand(2, 1024, 128)
-    # attention = MultiHeadedAttention(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, k_in_dim=192, v_in_dim=192)
-    # query = feature['prompt']
-    # key = feature['vp'].unsqueeze(1).repeat(1, feature['prompt'].shape[1], 1)
-    # value = feature['vp'].unsqueeze(1).repeat(1, feature['prompt'].shape[1], 1)
-    # o = attention(query, key, value)
-    # encoder_layer = PromptVPEncoderLayer(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, k_in_dim=192,
-    #                                      v_in_dim=192)
-    # encoder_layer(query, key, value)
-    # encoder = PromptVPEncoder(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, k_in_dim=192, v_in_dim=192, num_blocks=2)
-    # encoder = PromptEncoder(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, num_blocks=2)
-    # encoder = MRTE(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, k_in_dim=1024, v_in_dim=1024, num_blocks=2)
-    # encoder = TransformerEncoder(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, k_in_dim=1024, v_in_dim=1024,
-    #                              num_blocks=2)
-    feature = {
-        'token_emb': torch.rand(2, 1024, 128),
-        'bert_hidden': torch.rand(2, 64, 768),
-    }
-    encoder = TextEncoder(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, k_in_dim=768, v_in_dim=768, num_blocks=2)
-    encoder.eval()
-    hidden = encoder(feature)
-    exit(0)
+# if __name__ == '__main__':
+#     # feature = {
+#     #     'token_emb': torch.rand(2, 1024, 128),
+#     #     'prompt': torch.rand(2, 1024, 150),
+#     #     'vp': torch.rand(2, 192)
+#     # }
+#     # x = torch.rand(2, 1024, 128)
+#     # attention = MultiHeadedAttention(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, k_in_dim=192, v_in_dim=192)
+#     # query = feature['prompt']
+#     # key = feature['vp'].unsqueeze(1).repeat(1, feature['prompt'].shape[1], 1)
+#     # value = feature['vp'].unsqueeze(1).repeat(1, feature['prompt'].shape[1], 1)
+#     # o = attention(query, key, value)
+#     # encoder_layer = PromptVPEncoderLayer(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, k_in_dim=192,
+#     #                                      v_in_dim=192)
+#     # encoder_layer(query, key, value)
+#     # encoder = PromptVPEncoder(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, k_in_dim=192, v_in_dim=192, num_blocks=2)
+#     # encoder = PromptEncoder(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, num_blocks=2)
+#     # encoder = MRTE(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, k_in_dim=1024, v_in_dim=1024, num_blocks=2)
+#     # encoder = TransformerEncoder(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, k_in_dim=1024, v_in_dim=1024,
+#     #                              num_blocks=2)
+#     feature = {
+#         'token_emb': torch.rand(2, 1024, 128),
+#         'bert_hidden': torch.rand(2, 64, 768),
+#     }
+#     encoder = TextEncoder(n_head=4, n_feat=1024, dropout_rate=0., q_in_dim=1024, k_in_dim=768, v_in_dim=768, num_blocks=2)
+#     encoder.eval()
+#     hidden = encoder(feature)
+#     exit(0)

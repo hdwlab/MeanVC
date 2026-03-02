@@ -1,9 +1,9 @@
 import os
-import json
-import argparse
-import glob
-from src.infer.dit_kvcache import DiT
-from src.model.utils import load_checkpoint
+# import json
+# import argparse
+# import glob
+# from .dit_kvcache import DiT
+# from src.model.utils import load_checkpoint
 import numpy as np
 import torch
 import time
@@ -13,7 +13,7 @@ import librosa
 import torchaudio.compliance.kaldi as kaldi
 import torch.nn as nn
 from librosa.filters import mel as librosa_mel_fn
-from src.runtime.speaker_verification.verification import init_model as init_sv_model
+# from src.runtime.speaker_verification.verification import init_model as init_sv_model
 
 C_KV_CACHE_MAX_LEN = 100
 
@@ -206,7 +206,7 @@ def inference_list(model, vocos, asr_model, sv_model, mel_extractor, sources, re
     all_time = 0
     
     ref_wav, _ = librosa.load(reference_path, sr=16000)
-    ref_wav_tensor = torch.from_numpy(ref_wav).unsqueeze(0).to(device)
+    # ref_wav_tensor = torch.from_numpy(ref_wav).unsqueeze(0).to(device)
     
 
     for source_path in tqdm(sources):
@@ -236,77 +236,77 @@ def inference_list(model, vocos, asr_model, sv_model, mel_extractor, sources, re
         
         print(f"Duration: {duration:.2f}s, Time: {time_item:.2f}s, RTF: {rtf:.4f}")
     
-    print(f"\n=== Results ===")
+    print("\n=== Results ===")
     print(f"Total RTF: {all_time / all_duration:.4f}")
     print(f"Mean RTF: {np.mean(rtfs):.4f}")
 
             
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    parser = argparse.ArgumentParser()
+#     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--model-config', type=str, default=None)
-    parser.add_argument('--ckpt-path', type=str, default=None)
-    parser.add_argument('--asr-ckpt-path', type=str, default='src/ckpt/fastu2++.pt')
-    parser.add_argument('--sv-ckpt-path', type=str, default='src/runtime/speaker_verification/ckpt/wavlm_large_finetune.pth')
-    parser.add_argument('--vocoder-ckpt-path', type=str, default=None)
-    parser.add_argument('--output-dir', type=str, default=None)
-    parser.add_argument('--source-path', type=str, default=None, help='Source audio file or directory')
-    parser.add_argument('--reference-path', type=str, required=True, help='Reference audio file')
-    parser.add_argument('--chunk-size', type=int, default=20)
-    parser.add_argument('--steps', type=int, default=2)
-    parser.add_argument('--seed', type=int, default=42, help='random seed')
+#     parser.add_argument('--model-config', type=str, default=None)
+#     parser.add_argument('--ckpt-path', type=str, default=None)
+#     parser.add_argument('--asr-ckpt-path', type=str, default='src/ckpt/fastu2++.pt')
+#     parser.add_argument('--sv-ckpt-path', type=str, default='src/runtime/speaker_verification/ckpt/wavlm_large_finetune.pth')
+#     parser.add_argument('--vocoder-ckpt-path', type=str, default=None)
+#     parser.add_argument('--output-dir', type=str, default=None)
+#     parser.add_argument('--source-path', type=str, default=None, help='Source audio file or directory')
+#     parser.add_argument('--reference-path', type=str, required=True, help='Reference audio file')
+#     parser.add_argument('--chunk-size', type=int, default=20)
+#     parser.add_argument('--steps', type=int, default=2)
+#     parser.add_argument('--seed', type=int, default=42, help='random seed')
 
-    args = parser.parse_args()
+#     args = parser.parse_args()
         
-    setup_seed(args.seed)
+#     setup_seed(args.seed)
     
-    os.makedirs(args.output_dir, exist_ok=True)
+#     os.makedirs(args.output_dir, exist_ok=True)
     
-    device = 'cpu'
+#     device = 'cpu'
 
-    with open(args.model_config) as f:
-        model_config = json.load(f)
+#     with open(args.model_config) as f:
+#         model_config = json.load(f)
 
-    model_cls = DiT
-    dit_model = model_cls(**model_config["model"])
-    total_params = sum(p.numel() for p in dit_model.parameters())
-    print(f"Total parameters: {total_params}")
-    dit_model = dit_model.to(device)
-    dit_model = load_checkpoint(dit_model, args.ckpt_path, device=device, use_ema=False)
-    dit_model = dit_model.float()
-    dit_model.eval()
+#     model_cls = DiT
+#     dit_model = model_cls(**model_config["model"])
+#     total_params = sum(p.numel() for p in dit_model.parameters())
+#     print(f"Total parameters: {total_params}")
+#     dit_model = dit_model.to(device)
+#     dit_model = load_checkpoint(dit_model, args.ckpt_path, device=device, use_ema=False)
+#     dit_model = dit_model.float()
+#     dit_model.eval()
 
-    vocos = torch.jit.load(args.vocoder_ckpt_path).to(device)
+#     vocos = torch.jit.load(args.vocoder_ckpt_path).to(device)
 
-    asr_model = torch.jit.load(args.asr_ckpt_path).to(device)
+#     asr_model = torch.jit.load(args.asr_ckpt_path).to(device)
 
-    sv_model = init_sv_model('wavlm_large', args.sv_ckpt_path)
-    sv_model = sv_model.to(device)
-    sv_model.eval()
+#     sv_model = init_sv_model('wavlm_large', args.sv_ckpt_path)
+#     sv_model = sv_model.to(device)
+#     sv_model.eval()
     
-    mel_extractor = MelSpectrogramFeatures(
-        sample_rate=16000, n_fft=1024, win_size=640, hop_length=160, 
-        n_mels=80, fmin=0, fmax=8000, center=True
-    ).to(device)
+#     mel_extractor = MelSpectrogramFeatures(
+#         sample_rate=16000, n_fft=1024, win_size=640, hop_length=160, 
+#         n_mels=80, fmin=0, fmax=8000, center=True
+#     ).to(device)
 
-    if os.path.isdir(args.source_path):
-        sources = glob.glob(os.path.join(args.source_path, "*.wav"))
-    else:
-        sources = [args.source_path]
+#     if os.path.isdir(args.source_path):
+#         sources = glob.glob(os.path.join(args.source_path, "*.wav"))
+#     else:
+#         sources = [args.source_path]
     
-    print(f"Found {len(sources)} source audio files")
+#     print(f"Found {len(sources)} source audio files")
 
-    inference_list(
-        model=dit_model,
-        vocos=vocos,
-        asr_model=asr_model,
-        sv_model=sv_model,
-        mel_extractor=mel_extractor,
-        sources=sources,
-        reference_path=args.reference_path,
-        chunk_size=args.chunk_size,
-        steps=args.steps,
-        output_dir=args.output_dir,
-        device=device
-    )
+#     inference_list(
+#         model=dit_model,
+#         vocos=vocos,
+#         asr_model=asr_model,
+#         sv_model=sv_model,
+#         mel_extractor=mel_extractor,
+#         sources=sources,
+#         reference_path=args.reference_path,
+#         chunk_size=args.chunk_size,
+#         steps=args.steps,
+#         output_dir=args.output_dir,
+#         device=device
+#     )

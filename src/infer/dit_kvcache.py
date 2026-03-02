@@ -9,13 +9,12 @@ from __future__ import annotations
 
 import torch
 from torch import nn
-import torch.nn.functional as F
 from einops import rearrange
 
 from x_transformers.x_transformers import RotaryEmbedding
 
-from src.model.prompt_vp import MRTE
-from modules import (
+from ..model.prompt_vp import MRTE
+from .modules import (
     TimestepEmbedding,
     ChunkDiTBlock,
     AdaLayerNorm_Final,
@@ -124,7 +123,7 @@ class DiT(nn.Module):
         x: float["b n d"],  # nosied input mel  # noqa: F722           B, T, 80
         t: float["b"] | float[""],  # time step  # noqa: F821 F722
         r: float["b"] | float[""],  # time step  # noqa: F821 F722
-        cache: float["b n d"],
+        cache: float["b n d"],  # noqa: F722
         cond: float["b n d"],  # bn  # noqa: F722         B, T, 256
         spks: float["b n d"],  # spks  # noqa: F722       B, T, 256
         prompts: float["b n d"],  # mel prompts  # noqa: F722       B, NT, 256
@@ -132,7 +131,7 @@ class DiT(nn.Module):
         mask: bool["b n"] | None = None,  # noqa: F722
         is_inference: bool = False,
         is_uncondition: bool = False,
-        cfg_mask: bool["b"] | None = None,  # noqa: F722
+        cfg_mask: bool["b"] | None = None,  # noqa: F722 F821
         kv_cache=None,
     ):
         batch, seq_len = x.shape[0], x.shape[1]

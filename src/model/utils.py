@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-import os
-import random
-from collections import defaultdict
-from importlib.resources import files
-import matplotlib.pylab as plt
+# import os
+# import random
+# import matplotlib.pylab as plt
 import torch
-from torch.nn.utils.rnn import pad_sequence
 
 # load checkpoint
 def load_checkpoint(model, ckpt_path, device, use_ema=True):
@@ -41,52 +38,52 @@ def load_checkpoint(model, ckpt_path, device, use_ema=True):
 
 
 
-# seed everything
-def seed_everything(seed=0):
-    random.seed(seed)
-    os.environ["PYTHONHASHSEED"] = str(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
+# # seed everything
+# def seed_everything(seed=0):
+#     random.seed(seed)
+#     os.environ["PYTHONHASHSEED"] = str(seed)
+#     torch.manual_seed(seed)
+#     torch.cuda.manual_seed(seed)
+#     torch.cuda.manual_seed_all(seed)
+#     torch.backends.cudnn.deterministic = True
+#     torch.backends.cudnn.benchmark = False
 
 
-# helpers
+# # helpers
 
-def optimized_scale(positive_flat, negative_flat):
-    dot_product = torch.sum(positive_flat * negative_flat, dim=1, keepdim=True)
-    squared_norm = torch.sum(negative_flat ** 2, dim=1, keepdim=True) + 1e-8
-    st_star = dot_product / squared_norm
-    return st_star
-
-
-def exists(v):
-    return v is not None
+# def optimized_scale(positive_flat, negative_flat):
+#     dot_product = torch.sum(positive_flat * negative_flat, dim=1, keepdim=True)
+#     squared_norm = torch.sum(negative_flat ** 2, dim=1, keepdim=True) + 1e-8
+#     st_star = dot_product / squared_norm
+#     return st_star
 
 
-def default(v, d):
-    return v if exists(v) else d
+# def exists(v):
+#     return v is not None
 
 
-def plot_spectrogram(spectrogram):
-    fig, ax = plt.subplots(figsize=(10, 2))
-    im = ax.imshow(spectrogram, aspect="auto", origin="lower",
-                   interpolation='none')
-    plt.colorbar(im, ax=ax)
+# def default(v, d):
+#     return v if exists(v) else d
 
-    fig.canvas.draw()
-    plt.close()
 
-    return fig
+# def plot_spectrogram(spectrogram):
+#     fig, ax = plt.subplots(figsize=(10, 2))
+#     im = ax.imshow(spectrogram, aspect="auto", origin="lower",
+#                    interpolation='none')
+#     plt.colorbar(im, ax=ax)
+
+#     fig.canvas.draw()
+#     plt.close()
+
+#     return fig
 
 
 # tensor helpers
 
 
-def lens_to_mask(t: int["b"], length: int | None = None) -> bool["b n"]:  # noqa: F722 F821
-    if not exists(length):
-        length = t.amax()
+# def lens_to_mask(t: int["b"], length: int | None = None) -> bool["b n"]:  # noqa: F722 F821
+#     if not exists(length):
+#         length = t.amax()
 
-    seq = torch.arange(length, device=t.device)
-    return seq[None, :] < t[:, None]
+#     seq = torch.arange(length, device=t.device)
+#     return seq[None, :] < t[:, None]

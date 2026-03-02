@@ -1,0 +1,39 @@
+[project]
+name = "meanvc"
+version = "0.1.0"
+description = "Lightweight and streaming zero-shot voice conversion via mean flows"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+dependencies = [
+  "torch>=2.0.0,<2.9.0",
+  # "torchvision>=0.15.0,<0.24.0",
+  "torchaudio>=2.0.0,<2.9.0",
+  "librosa",
+  "einops",
+  "x-transformers",
+  "tqdm",
+  # "PyYAML",
+  "omegaconf",
+  "transformers",
+  # "pyaudio",
+  # "accelerate",
+  # "matplotlib",
+  # "wandb",
+  # "ema_pytorch",
+  # "jiwer",
+  # "zhon",
+  # "zhconv",
+  # "funasr",
+  # "encodec",
+  # "prefigure",
+  "huggingface-hub",
+  "safetensors",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

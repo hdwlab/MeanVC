@@ -14,8 +14,8 @@ from typing import Optional
 
 import torch
 import torch.nn.functional as F
-import torchaudio
-from librosa.filters import mel as librosa_mel_fn
+# import torchaudio
+# from librosa.filters import mel as librosa_mel_fn
 from torch import nn
 from x_transformers.x_transformers import apply_rotary_pos_emb
 
