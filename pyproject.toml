@@ -1,5 +1,5 @@
 [project]
-name = "meanvc"
+name = "mean-vc"
 version = "0.1.0"
 description = "Lightweight and streaming zero-shot voice conversion via mean flows"
 readme = "README.md"
