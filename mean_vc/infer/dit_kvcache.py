@@ -72,9 +72,9 @@ class DiT(nn.Module):
 
         self.dim = dim
         self.depth = depth
-        
+
         self.timbre_encoder = MRTE(n_head=4, n_feat=bn_dim, dropout_rate=0., q_in_dim=bn_dim, k_in_dim=mel_dim, v_in_dim=mel_dim, num_blocks=2)
-        
+
         self.transformer_blocks = nn.ModuleList(
             [
                 ChunkDiTBlock(
@@ -137,38 +137,38 @@ class DiT(nn.Module):
         batch, seq_len = x.shape[0], x.shape[1]
 
         spks_ = spks.unsqueeze(1).repeat(1, cond.shape[1], 1)
-        
+
         t = self.t_time_embed(t)
         r = self.r_time_embed(r)
         t = t + r
-        
+
         # add timbre encoding
         timbre_cond = self.timbre_encoder(cond, prompts, spks)   # B,T, bn_dim
-        
+
         if cfg_mask is not None:
-            cfg_mask_ = rearrange(cfg_mask, "b -> b 1 1") 
+            cfg_mask_ = rearrange(cfg_mask, "b -> b 1 1")
             timbre_cond = torch.where(cfg_mask_, torch.zeros_like(timbre_cond), timbre_cond)
             spks_ = torch.where(cfg_mask_, torch.zeros_like(spks_), spks_)
-        
+
         # x = self.input_embed(x, timbre_cond, drop_audio_cond=is_uncondition)
         x = self.input_embed(x, timbre_cond, spks_, drop_audio_cond=is_uncondition)
-        
+
         # x = self.batch_norm(x.view(-1, x.shape[-1])).view(batch, seq_len, -1)
-        
+
         if not is_inference:
             if cache != None:
                 cache = self.cache_embed(cache)
                 x = torch.concat((cache, x), dim=1)   # [b, 2n, dim]
                 if mask is not None:
                     mask = torch.concat((mask, mask), dim=1)  # [b, 2n]
-                
+
                 cache_len = cache.shape[1]
                 rope_cache = self.rotary_embed.forward_from_seq_len(cache_len)
                 rope_x = self.rotary_embed.forward_from_seq_len(seq_len)
-                rope = (torch.concat((rope_cache[0], rope_x[0]), dim=1), rope_cache[1])  
+                rope = (torch.concat((rope_cache[0], rope_x[0]), dim=1), rope_cache[1])
             else:
                 rope = self.rotary_embed.forward_from_seq_len(seq_len)
-            
+
         else:
             if cache != None:
                 cache = self.cache_embed(cache)
@@ -176,11 +176,12 @@ class DiT(nn.Module):
                 rope = self.rotary_embed.forward_from_seq_len(offset + seq_len)
             else:
                 rope = self.rotary_embed.forward_from_seq_len(seq_len)
-            
+
             if rope[0].dim() == 2:
-                rope = (rope[0].unsqueeze(1), rope[1])
-            rope = (rope[0][:, - 140 : , :], rope[1])
-                
+                rope = (rope[0][- 140 : , :], rope[1])
+            else:
+                rope = (rope[0][:, - 140 : , :], rope[1])
+
 
         new_kv_cache = []
 
@@ -194,12 +195,12 @@ class DiT(nn.Module):
             x, new_block_kv_cache = block(x, t, mask=mask, rope=rope, is_inference=is_inference, kv_cache=block_kv_cache)
 
             new_kv_cache.append(new_block_kv_cache)
-        
+
         x = x[:, -seq_len:, :]
         x = self.norm_out(x, t)
-        
+
         output = self.proj_out(x)
-        
+
         return output, new_kv_cache
 
 
